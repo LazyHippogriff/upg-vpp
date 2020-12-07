@@ -874,6 +874,8 @@ typedef struct
   //TODO: Change to UPF flags?
   u32 pfcp_spec_version;
   u32 rand_base;
+
+  pfcp_node_id_t node_id;
 } upf_main_t;
 
 extern const fib_node_vft_t upf_vft;

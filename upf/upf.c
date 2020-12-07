@@ -382,6 +382,9 @@ upf_init (vlib_main_t * vm)
   sm->upf_simple_counters[UPF_FLOW_COUNTER].stat_segment_name =
     "/upf/total_flows";
 
+  sm->node_id.type = NID_FQDN;
+  sm->node_id.fqdn = format (0, (char *) "\x03upg");
+
   error = flowtable_init (vm);
   if (error)
     return error;

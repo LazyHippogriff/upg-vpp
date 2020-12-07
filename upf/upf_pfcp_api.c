@@ -96,9 +96,14 @@ upf_pfcp_api_session_data_init (void *sxp, time_t start_time)
 }
 
 static void
-init_response_node_id (struct pfcp_response *r)
+init_response_node_id (struct pfcp_response *response)
 {
-  //TODO: need CLI/API to set local Node-Id.....
+  upf_main_t *gtm = &upf_main;
+  response->node_id = gtm->node_id;
+  if (gtm->node_id.type == NID_FQDN)
+    {
+      response->node_id.fqdn = vec_dup (gtm->node_id.fqdn);
+    }
 }
 
 /*************************************************************************/
@@ -281,8 +286,6 @@ handle_association_setup_request (pfcp_msg_t * req,
   SET_BIT (resp.grp.fields, ASSOCIATION_SETUP_RESPONSE_CAUSE);
   resp.response.cause = PFCP_CAUSE_REQUEST_REJECTED;
 
-  init_response_node_id (&resp.response);
-
   SET_BIT (resp.grp.fields, ASSOCIATION_SETUP_RESPONSE_RECOVERY_TIME_STAMP);
   resp.recovery_time_stamp = psm->start_time;
 
@@ -337,6 +340,9 @@ handle_association_setup_request (pfcp_msg_t * req,
 
       resp.response.cause = PFCP_CAUSE_REQUEST_ACCEPTED;
     }
+
+  SET_BIT (resp.grp.fields, ASSOCIATION_SETUP_RESPONSE_NODE_ID);
+  init_response_node_id (&resp.response);
 
   upf_pfcp_send_response (req, 0, PFCP_ASSOCIATION_SETUP_RESPONSE, &resp.grp);
 
@@ -2500,6 +2506,9 @@ handle_session_establishment_request (pfcp_msg_t * req,
   upf_debug ("Apply: %d\n", r);
 
   pfcp_update_finish (sess);
+
+  SET_BIT (resp.grp.fields, SESSION_ESTABLISHMENT_REQUEST_NODE_ID);
+  init_response_node_id (&resp.response);
 
   upf_debug ("%U", format_pfcp_session, sess, PFCP_ACTIVE, /*debug */ 1);
 
