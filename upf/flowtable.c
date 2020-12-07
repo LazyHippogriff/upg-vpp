@@ -68,9 +68,9 @@ flow_entry_cache_fill (flowtable_main_t * fm, flowtable_main_per_cpu_t * fmt)
 always_inline void
 flow_entry_cache_empty (flowtable_main_t * fm, flowtable_main_per_cpu_t * fmt)
 {
-#if CLIB_DEBUG > 0
-  u32 cpu_index = os_get_thread_index ();
-#endif
+/* #if CLIB_DEBUG > 0 */
+/*   u32 cpu_index = os_get_thread_index (); */
+/* #endif */
   int i;
 
   if (pthread_spin_lock (&fm->flows_lock) == 0)
@@ -81,10 +81,10 @@ flow_entry_cache_empty (flowtable_main_t * fm, flowtable_main_per_cpu_t * fmt)
 
 	  upf_debug ("releasing flow %p, index %u",
 		     pool_elt_at_index (fm->flows, f_index), f_index);
-#if CLIB_DEBUG > 0
-	  ASSERT (pool_elt_at_index (fm->flows, f_index)->cpu_index ==
-		  cpu_index);
-#endif
+/* #if CLIB_DEBUG > 0 */
+/* 	  ASSERT (pool_elt_at_index (fm->flows, f_index)->cpu_index == */
+/* 		  cpu_index); */
+/* #endif */
 
 	  pool_put_index (fm->flows, f_index);
 	}
@@ -108,9 +108,9 @@ flow_entry_alloc (flowtable_main_t * fm, flowtable_main_per_cpu_t * fmt)
 
   f_index = vec_pop (fmt->flow_cache);
   f = pool_elt_at_index (fm->flows, f_index);
-#if CLIB_DEBUG > 0
-  ASSERT (f->cpu_index == os_get_thread_index ());
-#endif
+/* #if CLIB_DEBUG > 0 */
+/*   ASSERT (f->cpu_index == os_get_thread_index ()); */
+/* #endif */
 
   return f;
 }
@@ -119,9 +119,9 @@ always_inline void
 flow_entry_free (flowtable_main_t * fm, flowtable_main_per_cpu_t * fmt,
 		 flow_entry_t * f)
 {
-#if CLIB_DEBUG > 0
-  ASSERT (f->cpu_index == os_get_thread_index ());
-#endif
+/* #if CLIB_DEBUG > 0 */
+/*   ASSERT (f->cpu_index == os_get_thread_index ()); */
+/* #endif */
 
   if (f->app_uri)
     vec_free (f->app_uri);

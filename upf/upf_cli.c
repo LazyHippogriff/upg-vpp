@@ -455,6 +455,8 @@ upf_tdf_ul_table_add_del_command_fn (vlib_main_t * vm,
   if (table_id == ~0)
     return clib_error_return (0, "table-id must be specified");
 
+  upf_proxy_init (vm);
+
   rv = vnet_upf_tdf_ul_table_add_del (vrf, fproto, table_id, add);
 
   switch (rv)
@@ -651,6 +653,8 @@ upf_gtpu_endpoint_add_del_command_fn (vlib_main_t * vm,
   u8 add = 1;
   int rv;
   u8 *s;
+
+  upf_proxy_init (vm);
 
   if (!unformat_user (main_input, unformat_line_input, line_input))
     return 0;

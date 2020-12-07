@@ -32,7 +32,7 @@ api-trace {
 
 cpu {
   main-core {{.MainCore}}
-  workers 0
+  workers 1
 }
 
 statseg {
