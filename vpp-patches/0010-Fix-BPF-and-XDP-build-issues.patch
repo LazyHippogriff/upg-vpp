@@ -1,0 +1,39 @@
+From f03fa0ca7dc3918b9619d31f375ec90a539eeeb1 Mon Sep 17 00:00:00 2001
+From: Sergey Matov <sergey.matov@travelping.com>
+Date: Tue, 22 Dec 2020 11:58:45 +0400
+Subject: [PATCH] Fix BPF and XDP build issues
+
+---
+ build/external/packages/libbpf.mk | 2 +-
+ src/plugins/af_xdp/af_xdp.h       | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/build/external/packages/libbpf.mk b/build/external/packages/libbpf.mk
+index aa72832af..24d0a36d2 100644
+--- a/build/external/packages/libbpf.mk
++++ b/build/external/packages/libbpf.mk
+@@ -48,7 +48,7 @@ define  libbpf_install_cmds
+ 	$(call libbpf_build_cmds__,install,$(libbpf_install_log))
+ endef
+ 
+-ifneq ($(LIBBPF_DEPS_CHECK),0)
++ifneq (0,0)
+   $(warning "Missing libbpf dependencies. libbpf will be skipped.")
+ libbpf-install:
+ 	@true
+diff --git a/src/plugins/af_xdp/af_xdp.h b/src/plugins/af_xdp/af_xdp.h
+index 3bd53ad76..71647a4dd 100644
+--- a/src/plugins/af_xdp/af_xdp.h
++++ b/src/plugins/af_xdp/af_xdp.h
+@@ -23,7 +23,7 @@
+ #include <bpf/xsk.h>
+ 
+ #define AF_XDP_NUM_RX_QUEUES_ALL        ((u16)-1)
+-
++#define SOL_XDP		283
+ #define af_xdp_log(lvl, dev, f, ...) \
+   vlib_log(lvl, af_xdp_main.log_class, "%v: " f, (dev)->name, ##__VA_ARGS__)
+ 
+-- 
+2.24.3 (Apple Git-128)
+
